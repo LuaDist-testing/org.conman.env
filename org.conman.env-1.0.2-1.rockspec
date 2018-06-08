@@ -1,22 +1,22 @@
 -- This file was automatically generated for the LuaDist project.
 
 package = "org.conman.env"
-version = "1.0.1-0"
+version = "1.0.2-1"
 
 -- LuaDist source
 source = {
-  tag = "1.0.1-0",
+  tag = "1.0.2-1",
   url = "git://github.com/LuaDist-testing/org.conman.env.git"
 }
 -- Original source
 -- source = 
 -- {
---   url = "https://raw.githubusercontent.com/spc476/lua-conmanorg/env-1.0.1/src/env.c"
+--   url = "https://raw.githubusercontent.com/spc476/lua-conmanorg/env-1.0.2/src/env.c"
 -- }
 
 description =
 {
-  homepage   = "https://github.com/spc476/lua-conmanorg/blob/env-1.0.1/src/env.c",
+  homepage   = "https://github.com/spc476/lua-conmanorg/blob/env-1.0.2/src/env.c",
   maintainer = "Sean Conner <sean@conman.org>",
   license    = "LGPL",
   summary    = "Loads all environment variables into a table.",

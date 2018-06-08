@@ -20,7 +20,7 @@
 * ---------------------------------------------------------------------
 *
 * This module is nothing more than an array of the environmental variables
-* of the current process.  There's not much more to day about this than
+* of the current process.  There's not much more to say about this than
 *
 	env = require "org.conman.env"
 	print(env.LUA_PATH)
@@ -62,13 +62,43 @@ int luaopen_org_conman_env(lua_State *L)
 
   for (i = 0 ; environ[i] != NULL ; i++)
   {
-    char *value = strchr(environ[i],'=');
-
-    assert(value != NULL);
-
-    lua_pushlstring(L,environ[i],(size_t)(value - environ[i]));
-    lua_pushstring(L,value + 1);
-    lua_settable(L,-3);
+    char   *value = strchr(environ[i],'=');
+    size_t  len;
+    int     type;
+    
+    if (value != NULL)
+    {
+      len = (size_t)(value - environ[i]);
+      value++;
+    }
+    else
+    {
+      len   = strlen(environ[i]);
+      value = "";
+    }
+    
+    /*---------------------------------------------------------------------
+    ; http://lwn.net/Articles/678148/
+    ;
+    ; The gist---if two environment variables exist with the same name,
+    ; getenv() will return the first one, while languages like Perl and Lua,
+    ; which dump everythinig into hash, will typically return the second
+    ; value, which could be exploited.  So we duplicate the behavior of
+    ; getenv() and only save the environment variable if it already hasn't
+    ; been set.
+    ;----------------------------------------------------------------------*/
+    
+    lua_pushlstring(L,environ[i],len);
+    lua_gettable(L,-2);
+    type = lua_type(L,-1);
+    lua_pop(L,1);
+    
+    if (type == LUA_TNIL)
+    {
+      lua_pushlstring(L,environ[i],len);
+      lua_pushstring(L,value);
+      lua_settable(L,-3);
+    }
   }
   
   return 1;
